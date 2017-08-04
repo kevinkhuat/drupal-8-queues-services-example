@@ -1,0 +1,8 @@
+services:
+  facebook_video.default:
+    class: Drupal\facebook_video\Utility\FacebookVideoService
+
+  plugin.manager.facebook_video_plugin:
+    class: Drupal\facebook_video\Plugin\FacebookVideoPluginManager
+    parent: default_plugin_manager
+

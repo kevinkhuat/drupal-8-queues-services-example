@@ -1,0 +1,5 @@
+name: Facebook Video
+type: module
+description: Wrapper for business logic for fetching Facebook Video data
+core: 8.x
+package: Custom

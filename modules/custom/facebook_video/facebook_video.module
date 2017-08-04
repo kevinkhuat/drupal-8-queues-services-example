@@ -1,0 +1,19 @@
+<?php
+/**
+ *
+ *
+ */
+
+function facebook_video_cron() {
+    // process queue items
+    facebook_video_process_queues();
+}
+
+function facebook_video_process_queues() {
+    // process queue items
+}
+
+function facebook_video_add_queue_items() {
+    // Fetch list of nodes from FacebookVideoService
+    // Loop through nodes and add them to the queue
+}
