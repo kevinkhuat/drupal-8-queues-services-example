@@ -4,16 +4,33 @@
  *
  */
 
-function facebook_video_cron() {
-    // process queue items
-    facebook_video_process_queues();
-}
+/**
+ * Add items to queue
+ */
+function facebook_video_add_queue_items()
+{
+    // Invoke facebook_video.default service
+    $facebookVideoService = \Drupal::service('facebook_video.default');
 
-function facebook_video_process_queues() {
-    // process queue items
-}
+    // Fetch list of nodes
+    $nodes = $facebookVideoService->fetchNodes();
 
-function facebook_video_add_queue_items() {
-    // Fetch list of nodes from FacebookVideoService
+    $queueService = \Drupal::service('queue');
+    $queue = $queueService->get('facebook-video-processing');
+
     // Loop through nodes and add them to the queue
+    foreach ($nodes as $node)
+    {
+        // Retrieve the fields we will pass along with each queue item
+        $field_fb_page_id = $node->get('field_fb_page_id')->getValue();
+        $field_fb_video_id = $node->get('field_fb_video_id')->getValue();
+        $nid = $node->id();
+
+        // Create queue item
+        $queue->createItem([
+            $nid,
+            $field_fb_page_id[0]['value'],
+            $field_fb_video_id[0]['value']
+        ]);
+    }
 }

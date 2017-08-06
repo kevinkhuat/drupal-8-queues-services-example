@@ -6,3 +6,6 @@ dependencies:
   - field
   - menu_ui
   - node
+  - path
+  - text
+  - user
