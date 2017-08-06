@@ -36,27 +36,34 @@ class FacebookVideoProcess extends QueueWorkerBase implements QueueWorkerInterfa
      */
     public function processItem($data)
     {
-        // Put array elements in their own variables
-        $nid = $data[0];
-        $pageId = $data[1];
-        $videoId = $data[2];
-
-        // add GET parameters
-        $requestUrl = $this->facebookViewsUrl . '?fb_page_id=' . $pageId . '&fb_video_id=' . $videoId;
-
-        // Invoke facebook_video.default service
-        $facebookVideoService = \Drupal::service('facebook_video.default');
-
-        // make an http request to node instance
-        $jsonResponse = $facebookVideoService->fetchJSONFromEndpoint($requestUrl);
-
-        // Only update node if the response is not empty
-        if (!empty($jsonResponse))
+        try
         {
-            $jsonDecode = \GuzzleHttp\json_decode($jsonResponse);
-            $views = $jsonDecode->views;
-            // Save node
-            $facebookVideoService->saveNode($nid, $views);
+
+            // Put array elements in their own variables
+            $nid = $data[0];
+            $pageId = $data[1];
+            $videoId = $data[2];
+
+            // add GET parameters
+            $requestUrl = $this->facebookViewsUrl . '?fb_page_id=' . $pageId . '&fb_video_id=' . $videoId;
+
+            // Invoke facebook_video.default service
+            $facebookVideoService = \Drupal::service('facebook_video.default');
+
+            // make an http request to node instance
+            $jsonResponse = $facebookVideoService->fetchJSONFromEndpoint($requestUrl);
+
+            // Only update node if the response is not empty
+            if (!empty($jsonResponse)) {
+                $jsonDecode = \GuzzleHttp\json_decode($jsonResponse);
+                $views = $jsonDecode->views;
+                // Save node
+                $facebookVideoService->saveNode($nid, $views);
+            }
+        }
+        catch (SuspendQueueException $e)
+        {
+            // send this back to the queue
         }
     }
 }
